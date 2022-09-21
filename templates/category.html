@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <main>
+        <div class="site-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-9">
+                        <div class="row">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'categories' %}">Categories</a></li>
+                                    {% for cat in category %}
+                                        {% if cat.parent %}
+                                            <li class="breadcrumb-item"><a
+                                                    href="{% url 'category' cat.parent.slug %}">{{ cat.parent.name }}</a>
+                                            </li>
+                                        {% endif %}
+                                        <li class="breadcrumb-item active"
+                                            aria-current="page">{{ cat.name | capfirst }}</li>
+                                    {% endfor %}
+                                </ol>
+                            </nav>
+                        </div>
+                        {% include "_items/objects.html" %}
+                    </div>
+                </div>
+                {% include "_items/pagination.html" %}
+            </div>
+        </div>
+    </main>
+{% endblock %}

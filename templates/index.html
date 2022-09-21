@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <main>
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4 text-center">Save a link!</h1>
+                <p class="lead text-center"> You can add your favourite links </p>
+                <form action="{% url 'add_bookmark' %}" class="input-group mb-3" method="post">
+                    <input type="text" name="add_bookmark_input" class="form-control" placeholder="Enter a URL"
+                           aria-label="URL" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                        {% csrf_token %}
+                        <button class="btn btn-dark" type="submit" id="save_link">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-9">
+                    {% include "_items/objects.html" %}
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

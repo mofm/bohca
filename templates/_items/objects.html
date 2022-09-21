@@ -1,0 +1,25 @@
+<div class="row">
+    {% for bookmark in page_obj %}
+        <div class="col-md-6">
+            <div class="d-flex post-entry">
+                <div class="custom-thumbnail">
+                    <img src="{{ bookmark.image }}" alt="Image" class="img-fluid">
+                </div>
+                <div class="post-content">
+                    <h3>
+                        <a href="{% url 'bookmark' bookmark.pk %}?next={{ request.get_full_path | urlencode }}">{{ bookmark.title }}</a>
+                    </h3>
+                    <div class="post-meta"><span>Added:</span> {{ bookmark.created | date:"d/m/Y G:i" }}</div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col">
+            <div class="text-center">
+                <h3>
+                    <a href="{% url  'home' %}">No bookmark. You can add new bookmarks!</a>
+                </h3>
+            </div>
+        </div>
+    {% endfor %}
+</div>

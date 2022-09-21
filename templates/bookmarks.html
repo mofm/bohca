@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <main>
+        <div class="site-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-9">
+                        {% include "_items/objects.html" %}
+                    </div>
+                </div>
+                {% include "_items/pagination.html" %}
+            </div>
+        </div>
+    </main>
+{% endblock %}

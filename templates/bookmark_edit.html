@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <main>
+        <div class="site-section">
+            <div class="container flex-grow-1">
+                <div class="row justify-content-center">
+                    <div class="col-md-9">
+                        <div class="row justify-content-center">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="text-center">Edit Bookmark:</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            {{ form.as_table }}
+                                        </div>
+                                        <div class="form-group text-center">
+                                            {#                                        <button type="button" class="btn btn-secondary">Close</button>#}
+                                            <a href="{% url 'bookmark' object.pk %}" class="btn btn-secondary">Close</a>
+                                            <button type="submit" class="btn btn-dark">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

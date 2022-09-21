@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <main>
+        <div class="site-section">
+            <div class="row">
+                <div class="col">
+                    <div class="form-content my-3 p-3">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-5">
+                                    <div class="card shadow-lg border-0 rounded-lg mt-0 mb-3">
+                                        <div class="card-header justify-content-center">
+                                            <h3 class="font-weight-light my-4 text-center">Edit Profile:</h3>
+                                        </div>
+                                        {% if profile_form.errors %}
+                                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                                <div id="form_errors">
+                                                    {% for key, value in profile_form.errors.items %}
+                                                        <strong>{{ value }}</strong>
+                                                    {% endfor %}
+                                                </div>
+                                                <button type="button" class="close" data-dismiss="alert"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="card-body">
+                                            <form method="POST">
+                                                {% csrf_token %}
+                                                <div class="form-row">
+                                                    <div class="col-md-10 offset-md-1">
+                                                        <div class="form-group">
+                                                            <label class="small mb-1" for="edit_profile">First
+                                                                name</label>
+                                                            {{ profile_form.first_name }}
+                                                            <span>
+                                                        </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col-md-10 offset-md-1">
+                                                        <div class="form-group">
+                                                            <label class="small mb-1" for="edit_profile">Last
+                                                                Name</label>
+                                                            {{ profile_form.last_name }}
+                                                            <span>
+                                                        </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col-md-10 offset-md-1">
+                                                        <div class="form-group">
+                                                            <label class="small mb-1"
+                                                                   for="id_new_password2">Email</label>
+                                                            {{ profile_form.email }}
+                                                            <span>
+                                                        </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col-md-10 offset-md-1">
+                                                        <div class="form-group">
+                                                            <a href="/password-change/">Change password</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col-md-10 offset-md-1">
+                                                        <div class="form-group mt-0 mb-1">
+                                                            <button type="submit" class="col-md-12 btn btn-dark"
+                                                                    name="profile_form">
+                                                                Update
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

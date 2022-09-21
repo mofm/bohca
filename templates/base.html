@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <title>Bookmark</title>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="toggle">
+        <a href="#" class="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
+            <span></span>
+        </a>
+    </div>
+    <div class="side-inner">
+
+        <div class="logo-wrap">
+            <div class="logo">
+                <span>B</span>
+            </div>
+            <span class="logo-text">Bookmark</span>
+        </div>
+
+        <div class="search-form">
+            <form action="{% url 'search' %}" method="get">
+            <span class="wrap-icon">
+              <span class="icon-search2"></span>
+            </span>
+                <input type="text" class="form-control" name="q" placeholder="Search...">
+            </form>
+        </div>
+        <div class="nav-menu">
+            <ul>
+                <li class="active"><a href="{% url 'home' %}" class="d-flex align-items-center"><span
+                        class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
+                <li><a href="{% url 'bookmarks' %}" class="d-flex align-items-center"><span
+                        class="wrap-icon icon-bookmark mr-3"></span><span class="menu-text">Bookmarks</span></a></li>
+                <li><a href="{% url 'categories' %}" class="d-flex align-items-center"><span
+                        class="wrap-icon icon-archive mr-3"></span><span class="menu-text">Categories</span></a></li>
+                <li><a href="{% url 'tags' %}" class="d-flex align-items-center"><span
+                        class="wrap-icon icon-tags mr-3"></span><span class="menu-text">Tags</span></a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' user.username %}" class="d-flex align-items-center"><span
+                            class="wrap-icon icon-cog mr-3"></span><span class="menu-text">Settings</span></a></li>
+                    <li>
+                        <form action="{% url 'logout' %}" method="POST">
+                            {% csrf_token %}
+                            <a class="d-flex align-items-center">
+                                <button class="btn bg-transparent btn-sm" type="submit"><span
+                                        class="wrap-icon icon-sign-out mr-3"></span><span
+                                        class="menu-text">Sign out</span></button>
+                            </a>
+                        </form>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</aside>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="container-fluid p-0">
+            <div class="alert {{ message.tags }} alert-dismissible alert-fixed" role="alert" style="width: 20rem">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                {{ message }}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+{% block content %}{% endblock %}
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

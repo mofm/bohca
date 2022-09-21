@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <main>
+        <div class="site-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <form class="form-inline" method="post">
+                        {% csrf_token %}
+                        <h3 class="text-success"><span class="icon-tag mr-1"></span></h3>
+                        <div class="form-group mx-sm-3 mb-2">
+                            <label for="NewCategory" class="sr-only">New Tag: </label>
+                            {{ tag_form.name }}
+                        </div>
+                        <button type="submit" class="btn btn-dark mb-2" name="tag_form">Add Tag</button>
+                    </form>
+                </div>
+                <hr/>
+                <div class="row row-cols-1 row-cols-md-4">
+                    {% if tags %}
+                        {% for tag in tags %}
+                            <h1>
+                                <div class="badge badge-pill {{ tag_color | random }}">
+                                    <a href="{% url 'tag' tag.slug %}" class="invert mr-2">{{ tag.name }}</a>
+                                    <button aria-label="Close" type="button" class="close" data-toggle="modal"
+                                            data-target="#deleteModal{{ tag.pk }}" style="font-size: 2.1rem;">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <div class="modal fade" id="deleteModal{{ tag.pk }}" tabindex="-1"
+                                         aria-labelledby="DeleteModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title text-dark" id="DeleteModalLabel">Delete
+                                                        Tag</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h6 class="text-dark">Are you sure you want to delete this tag?</h6>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Close
+                                                    </button>
+                                                    <form action="{% url 'delete_tag' tag.pk %}" method="post">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {#                            <a href="{% url 'tag' tag.slug %}" class="badge badge-pill {{ tag_color | random }}">#}
+                                {#                                {{ tag.name }}#}
+                                {#                            </a>#}
+                            </h1>
+                        {% endfor %}
+                    {% else %}
+                        <p>No Tags</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

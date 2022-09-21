@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <main>
+        <div class="site-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-9">
+                        <div class="row justify-content-center">
+                            <div class="card">
+                                {% if next %}
+                                    <div class="card-header">
+                                        <a class="page-link float-left" href="{{ next }}">Back</a>
+                                    </div>
+                                {% endif %}
+                                <img src="{{ bookmark.image }}" class="card-img-top" alt="..."/>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ bookmark.title }}</h5>
+                                    <p class="card-text">{{ bookmark.description }}</p>
+                                    <p>
+                                        <small class="text-muted">{{ bookmark.created | date:"d/m/Y G:i" }}</small>
+                                    </p>
+                                    <p><a href="{{ bookmark.link }}" class="btn btn-primary">Go to site</a></p>
+                                    <p>
+                                        {% for tag in bookmark.tags.all %}
+                                            <a href="{% url 'tag' tag.slug %}"
+                                               class="badge badge-pill badge-light">{{ tag.name }}</a>
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <button type="submit" class="btn btn-link float-left" data-toggle="modal"
+                                            data-target="#deleteModal{{ bookmark.pk }}">
+                                        <i class="wrap-icon icon-trash"></i>
+                                    </button>
+                                    <div class="modal fade" id="deleteModal{{ bookmark.pk }}" tabindex="-1"
+                                         aria-labelledby="DeleteModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="DeleteModalLabel">Delete Bookmark</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this bookmark?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Close
+                                                    </button>
+                                                    <form action="{% url 'delete' bookmark.pk %}" method="post">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-link float-right">
+                                        <a href="{% url 'edit' bookmark.pk %}">
+                                            <i class="wrap-icon icon-pencil"></i>
+                                        </a>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

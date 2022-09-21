@@ -1,0 +1,1 @@
+web: gunicorn bohca.wsgi:application

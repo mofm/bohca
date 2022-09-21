@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <main>
+        <div class="site-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-9">
+                        <div class="row">
+                            <h3 class="text-info"><span class="wrap-icon icon-tags"></span> {{ tag_name }} </h3>
+                        </div>
+                        <hr/>
+                        {% include "_items/objects.html" %}
+                    </div>
+                </div>
+                {% include "_items/pagination.html" %}
+            </div>
+        </div>
+    </main>
+{% endblock %}
