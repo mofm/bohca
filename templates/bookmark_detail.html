@@ -20,7 +20,7 @@
                                     <p>
                                         <small class="text-muted">{{ bookmark.created | date:"d/m/Y G:i" }}</small>
                                     </p>
-                                    <p><a href="{{ bookmark.link }}" class="btn btn-primary">Go to site</a></p>
+                                    <p><a href="{{ bookmark.link }}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Go to site</a></p>
                                     <p>
                                         {% for tag in bookmark.tags.all %}
                                             <a href="{% url 'tag' tag.slug %}"

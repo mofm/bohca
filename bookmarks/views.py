@@ -9,6 +9,7 @@ from django.views.generic import TemplateView, View, DeleteView, UpdateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.db import IntegrityError
+from urllib.error import URLError, HTTPError
 
 from .models import Bookmarks, BookmarkCategory, BookmarkTags
 from .forms import CategoryForm, TagForm, UserUpdateForm
@@ -94,15 +95,11 @@ class SearchResults(LoginRequiredMixin, TemplateView):
                 Q(title__icontains=query) | Q(description__icontains=query) | Q(link__icontains=query)
             ).distinct()
             return object_list
+        return []
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if not self.request.user.is_authenticated:
-            return context
-
-        object_list = self.get_queryset()
-        results = object_list.count()
-        context.update(paginate(object_list, self.request), results=results)
+        context.update(paginate(self.get_queryset(), self.request))
         return context
 
 
@@ -139,8 +136,12 @@ class AddBookmark(LoginRequiredMixin, View):
                 messages.success(request, "Bookmark added!")
             else:
                 messages.warning(request, "Invalid URL!")
-        except Exception:
-            messages.error(request, "Error adding bookmark!")
+        except HTTPError as exc:
+            messages.error(request, "HTTP Error: {}".format(exc.code))
+        except URLError as exc:
+            messages.error(request, "Failed to reach a server: {}".format(exc.reason))
+        except Exception as exc:
+            messages.error(request, "Something went wrong: {}".format(exc))
 
         return redirect(request.META.get('HTTP_REFERER'))
 
@@ -167,8 +168,8 @@ class EditBookmark(LoginRequiredMixin, UpdateView):
 
     def get_form(self, *args, **kwargs):
         form = super(EditBookmark, self).get_form(*args, **kwargs)
-        form.fields['category'].queryset = BookmarkCategory.objects.filter(user=self.request.user)
-        form.fields['tags'].queryset = BookmarkTags.objects.filter(user=self.request.user)
+        form.fields['category'].queryset = BookmarkCategory.objects.filter(user=self.request.user).order_by('name')
+        form.fields['tags'].queryset = BookmarkTags.objects.filter(user=self.request.user).order_by('name')
         for myField in form.fields:
             form.fields[myField].widget.attrs['class'] = 'form-control'
         return form

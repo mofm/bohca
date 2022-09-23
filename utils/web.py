@@ -28,13 +28,13 @@ class MyParser(HTMLParser):
         elif tag == 'meta':
             if ('property', 'og:description') in attrs:
                 self.description = dict(attrs).get('content')
-            # elif ('property', 'og:title') in attrs:
-            #     self.title = dict(attrs).get('content')
+            elif ('property', 'og:title') in attrs:
+                self.title = dict(attrs).get('content')
             elif ('property', 'og:image') in attrs:
                 self.image = dict(attrs).get('content')
 
     def handle_data(self, data):
-        if self.lasttag == 'title':
+        if not self.title and self.lasttag == 'title':
             self.title = data
             self.lasttag = ''
 
