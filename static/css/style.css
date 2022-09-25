@@ -292,10 +292,6 @@ main {
 .burger:focus {
   outline: none; }
 
-/*.image-parent {*/
-/*  max-width: 80px;*/
-/*}*/
-
 .card-img-top {
     max-height: 300px;
     min-height: 150px;

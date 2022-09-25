@@ -125,15 +125,20 @@ class AddBookmark(LoginRequiredMixin, View):
         try:
             data = request.POST.get("add_bookmark_input")
             if data and check_url(data):
-                parsed_html = parse_url(data)
-                Bookmarks.objects.create(
-                    user=request.user,
-                    link=data,
-                    description=parsed_html["description"],
-                    title=parsed_html["title"],
-                    image=parsed_html["image"],
-                )
-                messages.success(request, "Bookmark added!")
+                if Bookmarks.objects.filter(link=data, user=self.request.user).exists():
+                    messages.warning(request, "Bookmark already exists!")
+                else:
+                    title, description, image = parse_url(data).values()
+                    if not title:
+                        title = data
+                    Bookmarks.objects.create(
+                        user=request.user,
+                        link=data,
+                        description=description,
+                        title=title,
+                        image=image
+                    )
+                    messages.success(request, "Bookmark added!")
             else:
                 messages.warning(request, "Invalid URL!")
         except HTTPError as exc:

@@ -42,8 +42,6 @@ class Bookmarks(models.Model):
 
     def save(self, *args, **kwargs):
         """Make sure to generate a unique random bookmark id"""
-        if Bookmarks.objects.filter(link=self.link, user=self.user).exists():
-            raise ValueError('Bookmark already exists')
         if self.id is None:
             while True:
                 random = get_random_string(12)

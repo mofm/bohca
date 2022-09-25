@@ -313,3 +313,22 @@ main {
 .burger:focus {
 	outline: none;
 }
+
+.card-img-top {
+    max-height: 300px;
+    min-height: 150px;
+    object-fit: contain;
+}
+
+.invert {
+  filter: invert(100%);
+}
+
+.alert-fixed {
+    position:fixed;
+    top: 5px;
+    right: 5px;
+    width: 100%;
+    z-index:9999;
+    border-radius:0px
+}
