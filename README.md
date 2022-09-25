@@ -57,7 +57,7 @@ touch .env/production.env
 For production environment, use environment variables from 'production.env' file
 
 ```bash
-DEBUG=True
+DEBUG="True"
 SECRET_KEY=your_secret_key
 ALLOWED_HOSTS= "127.0.0.1, localhost"
 ```
