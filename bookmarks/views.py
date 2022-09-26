@@ -256,7 +256,8 @@ class BookmarkDetailView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         next_url = self.request.GET.get('next')
-        context.update({'bookmark': Bookmarks.objects.get(id=kwargs['pk']), 'next': next_url})
+        context.update({'bookmark': Bookmarks.objects.get(bm_id=kwargs['bm_id'],
+                                                          user=self.request.user), 'next': next_url})
         return context
 
 
