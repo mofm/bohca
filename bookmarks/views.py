@@ -1,5 +1,5 @@
 from django.shortcuts import redirect
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -15,6 +15,8 @@ from .models import Bookmarks, BookmarkCategory, BookmarkTags
 from .forms import CategoryForm, TagForm, UserUpdateForm
 from utils.web import check_url
 from utils.parseurl import parse_url
+from utils.csv_ops import ImportCsv, BackupCsv
+from utils.browser import ExportHTML
 
 
 # Create your views here.
@@ -25,8 +27,8 @@ class LoginView(TemplateView, View):
         return self.render_to_response({})
 
     def post(self, request, *args, **kwargs):
-        user = authenticate(username=request.POST.get('username'),
-                            password=request.POST.get('password'))
+        user = authenticate(username=self.request.POST.get('username'),
+                            password=self.request.POST.get('password'))
         next_url = request.POST.get('next')
         if not next_url:
             next_url = 'home'
@@ -47,7 +49,7 @@ class LoginView(TemplateView, View):
 
 class LogoutView(View):
     def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
+        if not self.request.user.is_authenticated:
             return redirect('home')
 
         logout(request)
@@ -99,7 +101,7 @@ class SearchResults(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(paginate(self.get_queryset(), self.request))
+        context.update(paginate(self.get_queryset().order_by('-created'), self.request))
         return context
 
 
@@ -165,7 +167,7 @@ class EditBookmark(LoginRequiredMixin, UpdateView):
         return obj
 
     def get_success_url(self, **kwargs):
-        return "/bookmarks/%s" % self.object.pk
+        return "/bookmarks/%s" % self.object.bm_id
 
     def get_queryset(self):
         qs = super(EditBookmark, self).get_queryset()
@@ -356,3 +358,48 @@ class DeleteTagView(LoginRequiredMixin, DeleteView):
     def form_valid(self, form):
         messages.success(self.request, "Tag deleted successfully!")
         return super().form_valid(form)
+
+
+class BackupBookmarksView(LoginRequiredMixin, View):
+    login_url = '/login'
+
+    def get(self, request, *args, **kwargs):
+        if 'backup_form' in request.GET:
+            response = HttpResponse(content_type='text/csv')
+            backup = BackupCsv(self.request.user, response)
+            return backup.get_backup()
+
+        return HttpResponseRedirect(reverse_lazy('home'))
+
+
+class RestoreBookmarksView(LoginRequiredMixin, View):
+    login_url = '/login'
+
+    def post(self, request, *args, **kwargs):
+        if 'csv_file' in request.FILES:
+            csv_file = self.request.FILES.get('csv_file')
+            if not csv_file.name.endswith('.csv'):
+                messages.warning(request, 'File is not CSV type')
+                return HttpResponseRedirect(reverse_lazy('home', kwargs={'username': self.request.user.username}))
+
+            importer = ImportCsv(self.request.user)
+            importer.set_csv_file(csv_file)
+            importer.import_csv()
+
+            messages.success(request, 'Bookmarks restored successfully!')
+            return HttpResponseRedirect(reverse_lazy('home'))
+        else:
+            messages.warning(request, 'No file selected')
+            return HttpResponseRedirect(reverse_lazy('profile', kwargs={'username': self.request.user.username}))
+
+
+class ExportHTMLView(LoginRequiredMixin, View):
+    login_url = '/login'
+
+    def get(self, request, *args, **kwargs):
+        if 'export_form' in request.GET:
+            response = HttpResponse(content_type='text/html')
+            exporter = ExportHTML(self.request.user, response)
+            return exporter.export()
+
+        return HttpResponseRedirect(reverse_lazy('home'))

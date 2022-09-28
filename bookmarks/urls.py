@@ -28,4 +28,7 @@ urlpatterns = [
     path("tags/delete/<int:pk>", DeleteTagView.as_view(), name="delete_tag"),
     path("profile/<username>", ProfileView.as_view(), name="profile"),
     path('password-change/', ChangePasswordView.as_view(), name='password_change'),
+    path("backup/", BackupBookmarksView.as_view(), name="backup"),
+    path("restore/", RestoreBookmarksView.as_view(), name="restore"),
+    path("export/", ExportHTMLView.as_view(), name="export"),
 ]
