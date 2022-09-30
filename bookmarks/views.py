@@ -17,6 +17,7 @@ from utils.web import check_url
 from utils.parseurl import parse_url
 from utils.csv_ops import ImportCsv, BackupCsv
 from utils.browser import ExportHTML
+from utils.magic import check_magic_buffer
 
 
 # Create your views here.
@@ -378,9 +379,9 @@ class RestoreBookmarksView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         if 'csv_file' in request.FILES:
             csv_file = self.request.FILES.get('csv_file')
-            if not csv_file.name.endswith('.csv'):
+            if check_magic_buffer(mime=True, buf=csv_file.read(1024)) != 'text/csv':
                 messages.warning(request, 'File is not CSV type')
-                return HttpResponseRedirect(reverse_lazy('home', kwargs={'username': self.request.user.username}))
+                return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
             importer = ImportCsv(self.request.user)
             importer.set_csv_file(csv_file)
@@ -390,7 +391,7 @@ class RestoreBookmarksView(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse_lazy('home'))
         else:
             messages.warning(request, 'No file selected')
-            return HttpResponseRedirect(reverse_lazy('profile', kwargs={'username': self.request.user.username}))
+            return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
 class ExportHTMLView(LoginRequiredMixin, View):

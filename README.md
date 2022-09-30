@@ -15,12 +15,15 @@ The project is written with django 4.1 and Python 3.9.
 * Search by title, description, links and tags
 * Separate settings for development and production(environment variables)
 * Add, edit and delete bookmarks, tags and categories
-* Custom admin interface, with search and filters ( view, edit, delete all bookmarks, tags and categories)
+* Backup bookmarks to CSV
+* Restore bookmarks from CSV
+* Export bookmarks to HTML (Firefox and Chrome compatible - *tested*)
+* Custom admin interface, with search and filters (view, edit, delete all bookmarks, tags and categories)
 
 ### Roadmap
 
-* Backup and restore bookmarks
-* Export bookmarks for browsers
+* ~~Backup and restore bookmarks~~
+* ~~Export bookmarks for browsers~~
 * Browser extension (Chrome, Firefox, Safari)
 
 ### Installation
@@ -42,6 +45,12 @@ git clone https://github.com/mofm/bohca.git
 
 ```bash
 pip install -r requirements.txt
+```
+
+- Freeze requirements
+
+```bash
+pip freeze > requirements.txt
 ```
 
 - Create environment files
